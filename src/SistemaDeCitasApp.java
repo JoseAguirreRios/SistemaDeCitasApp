@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class SistemaDeCitasApp {
+public class SistemaDeCitasApp { // Pendiente agregar registro de administrador
 
     static ArrayList<String> doctores = new ArrayList<>();
     static ArrayList<String> pacientes = new ArrayList<>();
@@ -14,7 +14,7 @@ public class SistemaDeCitasApp {
             System.out.println("\n--- Sistema de Citas Simple ---");
             System.out.println("1. Dar de alta doctor");
             System.out.println("2. Dar de alta paciente");
-            System.out.println("3. Crear cita");
+            System.out.println("3. Crear cita"); // Pendiente agregar codigo de (citas recurrentes, historial medico)
             System.out.println("4. Ver doctores");
             System.out.println("5. Ver pacientes");
             System.out.println("6. Ver citas");
@@ -112,7 +112,7 @@ public class SistemaDeCitasApp {
         }
     }
 
-    public static void verCitas() {
+    public static void verCitas() { // Pendiente agregar reagendar cita
         System.out.println("\n--- Citas Registradas ---");
         for (String cita : citas) {
             System.out.println(cita);
