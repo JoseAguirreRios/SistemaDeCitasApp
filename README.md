@@ -9,7 +9,7 @@
 - Ejecutar el archivo `SistemaCitasApp.java`.
 
 ## Créditos
-- Desarrollado por [Tu Nombre].
+- Desarrollado por Jose Andres Aguirre Rios.
 
 ## Licencia
 - MIT License.
