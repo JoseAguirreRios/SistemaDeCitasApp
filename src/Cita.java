@@ -1,7 +1,10 @@
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class Cita implements Comparable<Cita> {
+public class Cita implements Serializable, Comparable<Cita> {
+    private static final long serialVersionUID = 1L;
+
     private Paciente paciente;
     private Doctor doctor;
     private String tipoConsulta;

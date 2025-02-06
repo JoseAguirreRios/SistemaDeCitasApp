@@ -1,7 +1,10 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -27,12 +30,24 @@ public class SistemaDeCitasGUI {
         doctores = new ArrayList<>();
         citas = new ArrayList<>();
 
+        DataManager.cargarDatos(pacientes, doctores, citas, pacienteListModel, doctorListModel, citaListModel);
         initUI();
     }
 
+    private void guardarDatos() {
+        DataManager.guardarDatos(pacientes, doctores, citas);
+    }
+
     private void initUI() {
-        // Apartado de pacientes
+        // Pacientes tab
         JPanel pacientePanel = new JPanel(new BorderLayout());
+        JTextField buscarPacienteField = new JTextField();
+        buscarPacienteField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                filtrarListaPacientes(buscarPacienteField.getText());
+            }
+        });
         JList<String> pacienteList = new JList<>(pacienteListModel);
         pacienteList.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent evt) {
@@ -42,6 +57,7 @@ public class SistemaDeCitasGUI {
                 }
             }
         });
+        pacientePanel.add(buscarPacienteField, BorderLayout.NORTH);
         pacientePanel.add(new JScrollPane(pacienteList), BorderLayout.CENTER);
 
         JPanel pacienteInputPanel = new JPanel(new GridLayout(2, 1));
@@ -53,6 +69,7 @@ public class SistemaDeCitasGUI {
                 pacienteListModel.addElement(nombre);
                 pacientes.add(new Paciente(nombre));
                 pacienteNombreField.setText("");
+                guardarDatos();
             }
         });
         pacienteInputPanel.add(new JLabel("Nombre:"));
@@ -61,8 +78,15 @@ public class SistemaDeCitasGUI {
 
         pacientePanel.add(pacienteInputPanel, BorderLayout.SOUTH);
 
-        // Apartado de doctores
+        // Doctores tab
         JPanel doctorPanel = new JPanel(new BorderLayout());
+        JTextField buscarDoctorField = new JTextField();
+        buscarDoctorField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                filtrarListaDoctores(buscarDoctorField.getText());
+            }
+        });
         JList<String> doctorList = new JList<>(doctorListModel);
         doctorList.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent evt) {
@@ -72,6 +96,7 @@ public class SistemaDeCitasGUI {
                 }
             }
         });
+        doctorPanel.add(buscarDoctorField, BorderLayout.NORTH);
         doctorPanel.add(new JScrollPane(doctorList), BorderLayout.CENTER);
 
         JPanel doctorInputPanel = new JPanel(new GridLayout(2, 1));
@@ -83,6 +108,7 @@ public class SistemaDeCitasGUI {
                 doctorListModel.addElement(nombre);
                 doctores.add(new Doctor(nombre));
                 doctorNombreField.setText("");
+                guardarDatos();
             }
         });
         doctorInputPanel.add(new JLabel("Nombre:"));
@@ -91,8 +117,15 @@ public class SistemaDeCitasGUI {
 
         doctorPanel.add(doctorInputPanel, BorderLayout.SOUTH);
 
-        // Citas
+        // Citas tab
         JPanel citaPanel = new JPanel(new BorderLayout());
+        JTextField buscarCitaField = new JTextField();
+        buscarCitaField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                filtrarListaCitas(buscarCitaField.getText());
+            }
+        });
         JList<String> citaList = new JList<>(citaListModel);
         citaList.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent evt) {
@@ -102,6 +135,7 @@ public class SistemaDeCitasGUI {
                 }
             }
         });
+        citaPanel.add(buscarCitaField, BorderLayout.NORTH);
         citaPanel.add(new JScrollPane(citaList), BorderLayout.CENTER);
 
         JPanel citaInputPanel = new JPanel(new GridLayout(2, 1));
@@ -111,7 +145,7 @@ public class SistemaDeCitasGUI {
 
         citaPanel.add(citaInputPanel, BorderLayout.SOUTH);
 
-        // Muestra las pestañas del menu del programa
+        // Adding tabs to the tabbedPane
         tabbedPane.addTab("Pacientes", pacientePanel);
         tabbedPane.addTab("Doctores", doctorPanel);
         tabbedPane.addTab("Citas", citaPanel);
@@ -121,6 +155,36 @@ public class SistemaDeCitasGUI {
         frame.setSize(600, 400);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+    }
+
+    private void filtrarListaPacientes(String texto) {
+        DefaultListModel<String> modeloFiltrado = new DefaultListModel<>();
+        for (Paciente paciente : pacientes) {
+            if (paciente.getNombre().toLowerCase().contains(texto.toLowerCase())) {
+                modeloFiltrado.addElement(paciente.getNombre());
+            }
+        }
+        pacienteListModel = modeloFiltrado;
+    }
+
+    private void filtrarListaDoctores(String texto) {
+        DefaultListModel<String> modeloFiltrado = new DefaultListModel<>();
+        for (Doctor doctor : doctores) {
+            if (doctor.getNombre().toLowerCase().contains(texto.toLowerCase())) {
+                modeloFiltrado.addElement(doctor.getNombre());
+            }
+        }
+        doctorListModel = modeloFiltrado;
+    }
+
+    private void filtrarListaCitas(String texto) {
+        DefaultListModel<String> modeloFiltrado = new DefaultListModel<>();
+        for (Cita cita : citas) {
+            if (cita.toString().toLowerCase().contains(texto.toLowerCase())) {
+                modeloFiltrado.addElement(cita.toString());
+            }
+        }
+        citaListModel = modeloFiltrado;
     }
 
     private void editarPaciente(int index) {
@@ -136,6 +200,7 @@ public class SistemaDeCitasGUI {
         Object[] message = {
                 "Dirección:", direccionField,
                 "Teléfono:", telefonoField,
+
                 "Enfermedad:", enfermedadField,
                 "Tipo de Sangre:", tipoSangreField,
                 "Sexo:", sexoField,
@@ -152,6 +217,7 @@ public class SistemaDeCitasGUI {
             paciente.setSexo(sexoField.getText());
             paciente.setNombreFamiliar(nombreFamiliarField.getText());
             paciente.setTelefonoFamiliar(telefonoFamiliarField.getText());
+            guardarDatos();
         }
     }
 
@@ -183,9 +249,9 @@ public class SistemaDeCitasGUI {
             doctor.setFechasDisponibles(fechasDisponiblesField.getText());
 
             doctorListModel.set(index, doctor.getNombre());
+            guardarDatos();
         }
     }
-
     private void crearCita() {
         if (pacientes.isEmpty() || doctores.isEmpty()) {
             JOptionPane.showMessageDialog(frame, "Debe registrar al menos un paciente y un doctor.");
@@ -221,6 +287,7 @@ public class SistemaDeCitasGUI {
             Collections.sort(citas);
 
             actualizarListaCitas();
+            guardarDatos();
         }
     }
 
@@ -254,7 +321,6 @@ public class SistemaDeCitasGUI {
             citaListModel.addElement(cita.toString());
         }
     }
-
     private void editarCita(int index) {
         Cita cita = citas.get(index);
 
@@ -285,6 +351,7 @@ public class SistemaDeCitasGUI {
 
             Collections.sort(citas);
             actualizarListaCitas();
+            guardarDatos();
         }
     }
 

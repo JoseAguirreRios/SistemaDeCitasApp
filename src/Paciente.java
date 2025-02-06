@@ -1,6 +1,9 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Paciente {
+public class Paciente implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private String nombre;
     private String direccion;
     private String telefono;
@@ -90,3 +93,4 @@ public class Paciente {
         }
     }
 }
+
