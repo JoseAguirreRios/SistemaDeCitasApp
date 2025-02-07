@@ -1,8 +1,8 @@
+import javax.swing.*;
 import java.io.*;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import javax.swing.DefaultListModel;
-import java.time.LocalDateTime;
 
 public class DataManager {
 
@@ -68,16 +68,18 @@ public class DataManager {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] datos = line.split(",");
-                Paciente paciente = new Paciente(datos[0]);
-                paciente.setDireccion(datos[1]);
-                paciente.setTelefono(datos[2]);
-                paciente.setEnfermedad(datos[3]);
-                paciente.setTipoSangre(datos[4]);
-                paciente.setSexo(datos[5]);
-                paciente.setNombreFamiliar(datos[6]);
-                paciente.setTelefonoFamiliar(datos[7]);
-                pacientes.add(paciente);
-                pacienteListModel.addElement(paciente.getNombre());
+                if (datos.length >= 8) {
+                    Paciente paciente = new Paciente(datos[0]);
+                    paciente.setDireccion(datos[1]);
+                    paciente.setTelefono(datos[2]);
+                    paciente.setEnfermedad(datos[3]);
+                    paciente.setTipoSangre(datos[4]);
+                    paciente.setSexo(datos[5]);
+                    paciente.setNombreFamiliar(datos[6]);
+                    paciente.setTelefonoFamiliar(datos[7]);
+                    pacientes.add(paciente);
+                    pacienteListModel.addElement(paciente.getNombre());
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -90,15 +92,17 @@ public class DataManager {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] datos = line.split(",");
-                Doctor doctor = new Doctor(datos[0]);
-                doctor.setDireccion(datos[1]);
-                doctor.setTelefono(datos[2]);
-                doctor.setSexo(datos[3]);
-                doctor.setAreaEspecializada(datos[4]);
-                doctor.setHorario(datos[5]);
-                doctor.setFechasDisponibles(datos[6]);
-                doctores.add(doctor);
-                doctorListModel.addElement(doctor.getNombre());
+                if (datos.length >= 7) {
+                    Doctor doctor = new Doctor(datos[0]);
+                    doctor.setDireccion(datos[1]);
+                    doctor.setTelefono(datos[2]);
+                    doctor.setSexo(datos[3]);
+                    doctor.setAreaEspecializada(datos[4]);
+                    doctor.setHorario(datos[5]);
+                    doctor.setFechasDisponibles(datos[6]);
+                    doctores.add(doctor);
+                    doctorListModel.addElement(doctor.getNombre());
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -111,14 +115,16 @@ public class DataManager {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] datos = line.split(",");
-                Paciente paciente = buscarPacientePorNombre(pacientes, datos[0]);
-                Doctor doctor = buscarDoctorPorNombre(doctores, datos[1]);
-                if (paciente != null && doctor != null) {
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-                    LocalDateTime fechaHora = LocalDateTime.parse(datos[3], formatter);
-                    Cita cita = new Cita(paciente, doctor, datos[2], fechaHora);
-                    citas.add(cita);
-                    citaListModel.addElement(cita.toString());
+                if (datos.length >= 4) {
+                    Paciente paciente = buscarPacientePorNombre(pacientes, datos[0]);
+                    Doctor doctor = buscarDoctorPorNombre(doctores, datos[1]);
+                    if (paciente != null && doctor != null) {
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+                        LocalDateTime fechaHora = LocalDateTime.parse(datos[3], formatter);
+                        Cita cita = new Cita(paciente, doctor, datos[2], fechaHora);
+                        citas.add(cita);
+                        citaListModel.addElement(cita.toString());
+                    }
                 }
             }
         } catch (IOException e) {
