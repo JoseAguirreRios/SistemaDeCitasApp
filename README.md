@@ -6,10 +6,16 @@
 3. Abrir el proyecto en IntelliJ IDEA.
 
 ## Uso del Programa
-- Ejecutar el archivo `SistemaCitasApp.java`.
+- Ejecutar el archivo `SistemaDeCitasGUI.java`.
 
 ## Créditos
 - Desarrollado por Jose Andres Aguirre Rios.
-
+## Version
+- 1.2
 ## Licencia
 - MIT License.
+
+## Actualizacion
+- Se agrego interfaz interactiva.
+- Se agrego almacenamiento de pacientes,clientes y citas.
+- Se agregp DataManager para carga de informacion a programa.
